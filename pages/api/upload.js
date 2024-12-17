@@ -1,3 +1,4 @@
+//pages/api/upload.js
 import cloudinary from "../../lib/cloudinary";
 
 export default async function handler(req, res) {

@@ -1,3 +1,4 @@
+//components/Navbar.js
 import { UserButton, useUser } from '@clerk/nextjs'; // Import Clerk's useUser hook
 import Link from 'next/link';
 

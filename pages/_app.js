@@ -1,8 +1,6 @@
 // pages/_app.js
 import { ClerkProvider, RedirectToSignIn } from '@clerk/nextjs';
 import { useRouter } from 'next/router';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
 import '../styles/globals.css';
 
 const clerkFrontendApi = 'your-clerk-frontend-api'; 
@@ -13,7 +11,7 @@ function MyApp({ Component, pageProps }) {
   const noLayoutRoutes = ['/sign-in', '/sign-up'];
 
   return (
-    <ClerkProvider frontendApi={clerkFrontendApi}>
+    <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}>
       <Component {...pageProps} />
     </ClerkProvider>
   );
