@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles */
+body {
+  @apply bg-gray-100 text-gray-900;
+}
+
+#sign-in-page,
+#sign-up-page {
+  background-color: #f0f0f0;
+  padding: 20px;
+}
