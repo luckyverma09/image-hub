@@ -1,9 +1,11 @@
-//pages/upload.js
+// pages/upload.js
 import { useState } from "react";
 import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/router";
 
 export default function UploadPage() {
   const { user } = useUser();
+  const router = useRouter();
   const [file, setFile] = useState(null);
 
   const handleSubmit = async (e) => {
@@ -37,9 +39,18 @@ export default function UploadPage() {
       <h1 className="text-2xl font-bold mb-4">Upload Image</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <input type="file" onChange={(e) => setFile(e.target.files[0])} />
-        <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded">
-          Upload
-        </button>
+        <div className="flex space-x-4">
+          <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded">
+            Upload
+          </button>
+          <button
+            type="button"
+            onClick={() => router.push("/")}
+            className="px-4 py-2 bg-gray-500 text-white rounded"
+          >
+            Go to Homepage
+          </button>
+        </div>
       </form>
     </div>
   );
