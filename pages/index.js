@@ -2,7 +2,6 @@
 import { useEffect, useState } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/router';
-import Image from 'next/image';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
@@ -34,7 +33,9 @@ export default function HomePage() {
       const response = await fetch(`/api/images?userId=${user.id}`);
       if (!response.ok) {
         const errorText = await response.text();
-        throw new Error(`Failed to fetch images: ${response.status} ${response.statusText}. ${errorText}`);
+        throw new Error(
+          `Failed to fetch images: ${response.status} ${response.statusText}. ${errorText}`
+        );
       }
       const data = await response.json();
       console.log('Fetched images:', data);
@@ -46,7 +47,6 @@ export default function HomePage() {
       setIsLoadingImages(false);
     }
   };
-  
 
   if (!isLoaded) {
     return <div>Loading...</div>;
