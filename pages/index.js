@@ -1,9 +1,9 @@
-//pages/index.js
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/router';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import Image from 'next/image';
 
 export default function HomePage() {
   const { isLoaded, isSignedIn, user } = useUser();
@@ -12,22 +12,8 @@ export default function HomePage() {
   const [error, setError] = useState(null);
   const router = useRouter();
 
-  useEffect(() => {
-    if (isLoaded && !isSignedIn) {
-      router.push('/sign-in');
-    }
-  }, [isLoaded, isSignedIn, router]);
-
-  useEffect(() => {
-    if (isLoaded && isSignedIn && user) {
-      console.log('User authenticated, fetching images');
-      fetchImages();
-    } else {
-      console.log('Authentication status:', { isLoaded, isSignedIn, user });
-    }
-  }, [isLoaded, isSignedIn, user]);
-
-  const fetchImages = async () => {
+  const fetchImages = useCallback(async () => {
+    if (!user) return;
     try {
       console.log('Fetching images for user:', user.id);
       const response = await fetch(`/api/images?userId=${user.id}`);
@@ -46,7 +32,22 @@ export default function HomePage() {
       setError(err.message);
       setIsLoadingImages(false);
     }
-  };
+  }, [user]);
+
+  useEffect(() => {
+    if (isLoaded && !isSignedIn) {
+      router.push('/sign-in');
+    }
+  }, [isLoaded, isSignedIn, router]);
+
+  useEffect(() => {
+    if (isLoaded && isSignedIn && user) {
+      console.log('User authenticated, fetching images');
+      fetchImages();
+    } else {
+      console.log('Authentication status:', { isLoaded, isSignedIn, user });
+    }
+  }, [isLoaded, isSignedIn, user, fetchImages]);
 
   if (!isLoaded) {
     return <div>Loading...</div>;
@@ -61,7 +62,9 @@ export default function HomePage() {
       <Navbar />
       <main className='container mx-auto px-4 py-8'>
         <h1 className='text-3xl font-bold mb-6'>Welcome to the Root Page</h1>
-        <p className='mb-8'>This is a protected page. You can only see this if you're logged in.</p>
+        <p className='mb-8'>
+          This is a protected page. You can only see this if you&apos;re logged in.
+        </p>
 
         <section>
           <h2 className='text-2xl font-semibold mb-4'>Uploaded Images</h2>
@@ -75,10 +78,13 @@ export default function HomePage() {
             <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
               {images.map((image) => (
                 <div key={image.asset_id} className='border rounded-lg overflow-hidden shadow-md'>
-                  <img
+                  <Image
                     src={image.secure_url}
-                    alt={image.public_id}
-                    className='w-full h-auto object-cover'
+                    alt={image.display_name}
+                    width={300}
+                    height={200}
+                    layout='responsive'
+                    objectFit='cover'
                   />
                 </div>
               ))}

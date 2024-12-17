@@ -1,12 +1,12 @@
 //pages/api/upload.js
-import cloudinary from "../../lib/cloudinary";
+import cloudinary from '../../lib/cloudinary';
 
 export default async function handler(req, res) {
-  if (req.method === "POST") {
+  if (req.method === 'POST') {
     const { file, userId } = req.body;
 
     if (!userId) {
-      return res.status(400).json({ error: "User ID is required" });
+      return res.status(400).json({ error: 'User ID is required' });
     }
 
     try {
@@ -15,10 +15,11 @@ export default async function handler(req, res) {
       });
 
       res.status(200).json(uploadedImage);
-    } catch (error) {
-      res.status(500).json({ error: "Image upload failed" });
+    } catch (err) {
+      console.error('Image upload failed:', err);
+      res.status(500).json({ error: 'Image upload failed', details: err.message });
     }
   } else {
-    res.status(405).json({ message: "Method not allowed" });
+    res.status(405).json({ message: 'Method not allowed' });
   }
 }
