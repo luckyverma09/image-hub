@@ -8,12 +8,13 @@ export default function HomePage() {
   const [images, setImages] = useState([]);
   const [isLoadingImages, setIsLoadingImages] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [deletingStatus, setDeletingStatus] = useState(null);
   const router = useRouter();
 
   const fetchImages = useCallback(async () => {
     if (!user) return;
     try {
-      console.log('Fetching images for user:', user.id);
       const response = await fetch(`/api/images?userId=${user.id}`);
       if (!response.ok) {
         const errorText = await response.text();
@@ -22,15 +23,30 @@ export default function HomePage() {
         );
       }
       const data = await response.json();
-      console.log('Fetched images:', data);
       setImages(data);
       setIsLoadingImages(false);
     } catch (err) {
-      console.error('Error fetching images:', err);
       setError(err.message);
       setIsLoadingImages(false);
     }
   }, [user]);
+
+  const deleteImage = async (publicId) => {
+    try {
+      const response = await fetch('/api/delete-image', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ publicId }),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to delete image from Cloudinary');
+      }
+      setImages((prevImages) => prevImages.filter((img) => img.public_id !== publicId));
+    } catch (err) {
+      console.error('Error deleting image:', err);
+      alert('Failed to delete the image. Please try again.');
+    }
+  };
 
   useEffect(() => {
     if (isLoaded && !isSignedIn) {
@@ -40,10 +56,7 @@ export default function HomePage() {
 
   useEffect(() => {
     if (isLoaded && isSignedIn && user) {
-      console.log('User authenticated, fetching images');
       fetchImages();
-    } else {
-      console.log('Authentication status:', { isLoaded, isSignedIn, user });
     }
   }, [isLoaded, isSignedIn, user, fetchImages]);
 
@@ -68,20 +81,19 @@ export default function HomePage() {
           ) : images.length === 0 ? (
             <p className='text-white'>No images uploaded yet.</p>
           ) : (
-            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
+            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-auto'>
               {images.map((image) => (
                 <div
                   key={image.asset_id}
-                  className='border-2 border-orange-500 rounded-lg overflow-hidden shadow-lg bg-gray-800'
+                  style={{ gridRowEnd: `span ${Math.ceil(image.height / 100)}` }}
+                  className='relative border-2 border-orange-500 rounded-lg overflow-hidden shadow-lg bg-gray-800 transition-all duration-300 hover:scale-105'
+                  onClick={() => setSelectedImage(image)}
                 >
                   <Image
                     src={image.secure_url}
                     alt={image.display_name}
-                    width={300}
-                    height={200}
-                    layout='responsive'
+                    layout='fill'
                     objectFit='cover'
-                    className='transition-all duration-300 hover:scale-105'
                   />
                 </div>
               ))}
@@ -89,6 +101,49 @@ export default function HomePage() {
           )}
         </section>
       </main>
+
+      {selectedImage && (
+        <div
+          className='fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50'
+          onClick={() => setSelectedImage(null)}
+        >
+          <div className='relative max-w-full max-h-full' onClick={(e) => e.stopPropagation()}>
+            <Image
+              src={selectedImage.secure_url}
+              alt={selectedImage.display_name}
+              layout='intrinsic'
+              width={selectedImage.width}
+              height={selectedImage.height}
+              className='rounded'
+            />
+            <div className='absolute bottom-8 left-0 right-0 flex justify-center space-x-8'>
+              <button
+                onClick={() => {
+                  if (window.confirm('Are you sure you want to delete this image?')) {
+                    setDeletingStatus('Deleting image...');
+                    deleteImage(selectedImage.public_id).then(() => {
+                      setDeletingStatus('Image deleted');
+                      setTimeout(() => {
+                        setSelectedImage(null);
+                        setDeletingStatus(null);
+                      }, 1000);
+                    });
+                  }
+                }}
+                className='px-6 py-3 bg-[#ffa31a] text-white rounded-lg shadow-md hover:bg-[#ffa31a] hover:scale-105 transition-all duration-300'
+              >
+                {deletingStatus || 'Delete'}
+              </button>
+              <button
+                onClick={() => setSelectedImage(null)}
+                className='px-6 py-3 bg-[#292929] text-white rounded-lg shadow-md border-2 border-white hover:text-[#292929] hover:bg-white hover:border-[#292929] hover:scale-105 transition-all duration-300'
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

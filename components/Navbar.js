@@ -5,10 +5,10 @@ import Image from 'next/image';
 
 export default function Navbar() {
   return (
-    <nav className='bg-black shadow-lg'>
+    <nav className='bg-[#262626] shadow-lg'>
       <div className='container mx-auto px-4 py-3 flex justify-between items-center'>
         <Link href='/' className='flex items-center space-x-2'>
-          <Image src='/logo.jpg' alt='My Image App Logo' width={150} height={40} />
+          <Image src='/logo.png' alt='My Image App Logo' width={150} height={40} />
         </Link>
 
         <div className='flex items-center space-x-8'>
