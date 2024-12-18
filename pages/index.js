@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/router';
+import cloudinaryLoader from '../ultis/cloudinaryLoader';
 import Image from 'next/image';
 
 export default function HomePage() {
@@ -112,7 +113,6 @@ export default function HomePage() {
   if (!isSignedIn) {
     return <div>Please sign in to view this page.</div>;
   }
-
   return (
     <div className='bg-black text-white min-h-screen'>
       <main className='container mx-auto px-4 py-8'>
@@ -135,6 +135,7 @@ export default function HomePage() {
                   onClick={() => setSelectedImage(image)}
                 >
                   <Image
+                    loader={cloudinaryLoader}
                     src={image.secure_url}
                     alt={image.display_name}
                     layout='fill'
@@ -158,9 +159,9 @@ export default function HomePage() {
           >
             <div className='relative w-full h-full'>
               <Image
+                loader={cloudinaryLoader}
                 src={selectedImage.secure_url}
                 alt={selectedImage.display_name}
-                layout='responsive'
                 width={selectedImage.width}
                 height={selectedImage.height}
                 className='rounded'
