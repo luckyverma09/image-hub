@@ -131,7 +131,7 @@ export default function HomePage() {
                 <div
                   key={image.asset_id}
                   style={{ gridRowEnd: `span ${Math.ceil(image.height / 70)}` }}
-                  className='relative rounded-lg overflow-hidden shadow-lg bg-gray-800 transition-all duration-300 hover:scale-105 hover:shadow-[0_0_25px_rgba(255,163,26,0.8)]'
+                  className='relative rounded-lg overflow-hidden shadow-lg bg-gray-800 transition-all duration-350 hover:scale-105 hover:shadow-[0_0_25px_rgba(255,163,26,0.8)]'
                   onClick={() => setSelectedImage(image)}
                 >
                   <Image
@@ -154,23 +154,25 @@ export default function HomePage() {
           onClick={() => setSelectedImage(null)}
         >
           <div
-            className='relative max-w-[90vw] max-h-[90vh] flex flex-col items-center'
+            className='relative p-4 bg-blur/50 rounded-lg max-w-3xl w-full max-h-[80vh] flex flex-col items-center overflow-auto'
             onClick={(e) => e.stopPropagation()}
           >
-            <div className='relative w-full h-full'>
-              <Image
-                loader={cloudinaryLoader}
-                src={selectedImage.secure_url}
-                alt={selectedImage.display_name}
-                width={selectedImage.width}
-                height={selectedImage.height}
-                className='rounded'
-              />
-            </div>
+            <Image
+              loader={cloudinaryLoader}
+              src={selectedImage.secure_url}
+              alt={selectedImage.display_name}
+              layout='intrinsic'
+              width={Math.min(selectedImage.width, 350)}
+              height={Math.min(
+                selectedImage.height,
+                350 * (selectedImage.height / selectedImage.width)
+              )}
+              className='rounded'
+            />
             <div className='mt-4 flex justify-center space-x-4'>
               <button
                 onClick={() => copyToClipboard(selectedImage.secure_url)}
-                className='px-6 py-3 bg-[#292929] text-white rounded-lg shadow-md border-2 border-white hover:text-[#ffa31a] hover:border-[#ffa31a] hover:scale-105 transition-all duration-300'
+                className='px-6 py-3 bg-[#292929] text-white rounded-lg shadow-md border-2 border-white hover:text-[#ffa31a] hover:border-[#ffa31a] hover:scale-105 transition-all duration-500'
               >
                 {copyStatus || 'Share'}
               </button>
@@ -187,13 +189,13 @@ export default function HomePage() {
                     });
                   }
                 }}
-                className='px-6 py-3 bg-[#ffa31a] text-white rounded-lg shadow-md hover:bg-[#ffa31a] hover:scale-105 transition-all duration-300'
+                className='px-6 py-3 bg-[#ffa31a] text-white rounded-lg shadow-md hover:bg-[#ffa31a] hover:scale-105 transition-all duration-350'
               >
                 {deletingStatus || 'Delete'}
               </button>
               <button
                 onClick={() => setSelectedImage(null)}
-                className='px-6 py-3 bg-[#292929] text-white rounded-lg shadow-md border-2 border-white hover:text-[#ffa31a] hover:border-[#ffa31a] hover:scale-105 transition-all duration-300'
+                className='px-6 py-3 bg-[#292929] text-white rounded-lg shadow-md border-2 border-white hover:text-[#ffa31a] hover:border-[#ffa31a] hover:scale-105 transition-all duration-350'
               >
                 Close
               </button>
