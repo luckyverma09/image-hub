@@ -1,4 +1,3 @@
-// components/Navbar.js
 import { UserButton } from '@clerk/nextjs';
 import Link from 'next/link';
 import Image from 'next/image';

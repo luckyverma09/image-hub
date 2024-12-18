@@ -10,6 +10,7 @@ export default function HomePage() {
   const [error, setError] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [deletingStatus, setDeletingStatus] = useState(null);
+  const [copyStatus, setCopyStatus] = useState('');
   const router = useRouter();
 
   const fetchImages = useCallback(async () => {
@@ -46,6 +47,50 @@ export default function HomePage() {
       console.error('Error deleting image:', err);
       alert('Failed to delete the image. Please try again.');
     }
+  };
+
+  const copyToClipboard = (url) => {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard
+        .writeText(url)
+        .then(() => {
+          setCopyStatus('Link Copied!');
+          setTimeout(() => setCopyStatus(''), 2000);
+        })
+        .catch((err) => {
+          console.error('Failed to copy: ', err);
+          fallbackCopyTextToClipboard(url);
+        });
+    } else {
+      fallbackCopyTextToClipboard(url);
+    }
+  };
+
+  const fallbackCopyTextToClipboard = (text) => {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.top = '0';
+    textArea.style.left = '0';
+    textArea.style.position = 'fixed';
+
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+
+    try {
+      const successful = document.execCommand('copy');
+      if (successful) {
+        setCopyStatus('Link Copied!');
+      } else {
+        setCopyStatus('Failed to copy');
+      }
+    } catch (err) {
+      console.error('Fallback: Oops, unable to copy', err);
+      setCopyStatus('Failed to copy');
+    }
+
+    document.body.removeChild(textArea);
+    setTimeout(() => setCopyStatus(''), 2000);
   };
 
   useEffect(() => {
@@ -85,8 +130,8 @@ export default function HomePage() {
               {images.map((image) => (
                 <div
                   key={image.asset_id}
-                  style={{ gridRowEnd: `span ${Math.ceil(image.height / 100)}` }}
-                  className='relative border-2 border-orange-500 rounded-lg overflow-hidden shadow-lg bg-gray-800 transition-all duration-300 hover:scale-105'
+                  style={{ gridRowEnd: `span ${Math.ceil(image.height / 70)}` }}
+                  className='relative rounded-lg overflow-hidden shadow-lg bg-gray-800 transition-all duration-300 hover:scale-105 hover:shadow-[0_0_25px_rgba(255,163,26,0.8)]'
                   onClick={() => setSelectedImage(image)}
                 >
                   <Image
@@ -107,16 +152,27 @@ export default function HomePage() {
           className='fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50'
           onClick={() => setSelectedImage(null)}
         >
-          <div className='relative max-w-full max-h-full' onClick={(e) => e.stopPropagation()}>
-            <Image
-              src={selectedImage.secure_url}
-              alt={selectedImage.display_name}
-              layout='intrinsic'
-              width={selectedImage.width}
-              height={selectedImage.height}
-              className='rounded'
-            />
-            <div className='absolute bottom-8 left-0 right-0 flex justify-center space-x-8'>
+          <div
+            className='relative max-w-[90vw] max-h-[90vh] flex flex-col items-center'
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className='relative w-full h-full'>
+              <Image
+                src={selectedImage.secure_url}
+                alt={selectedImage.display_name}
+                layout='responsive'
+                width={selectedImage.width}
+                height={selectedImage.height}
+                className='rounded'
+              />
+            </div>
+            <div className='mt-4 flex justify-center space-x-4'>
+              <button
+                onClick={() => copyToClipboard(selectedImage.secure_url)}
+                className='px-6 py-3 bg-[#292929] text-white rounded-lg shadow-md border-2 border-white hover:text-[#ffa31a] hover:border-[#ffa31a] hover:scale-105 transition-all duration-300'
+              >
+                {copyStatus || 'Share'}
+              </button>
               <button
                 onClick={() => {
                   if (window.confirm('Are you sure you want to delete this image?')) {
@@ -136,7 +192,7 @@ export default function HomePage() {
               </button>
               <button
                 onClick={() => setSelectedImage(null)}
-                className='px-6 py-3 bg-[#292929] text-white rounded-lg shadow-md border-2 border-white hover:text-[#292929] hover:bg-white hover:border-[#292929] hover:scale-105 transition-all duration-300'
+                className='px-6 py-3 bg-[#292929] text-white rounded-lg shadow-md border-2 border-white hover:text-[#ffa31a] hover:border-[#ffa31a] hover:scale-105 transition-all duration-300'
               >
                 Close
               </button>

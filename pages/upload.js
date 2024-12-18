@@ -47,7 +47,7 @@ export default function UploadPage() {
 
   return (
     <div className='bg-black text-white min-h-screen'>
-      <main className='container mx-auto px-4 py-8'>
+      <main className='  container mx-auto px-4  py-60'>
         <div className='relative z-10 bg-white bg-opacity-30 backdrop-blur-md border border-gray-200 rounded-lg p-8 shadow-lg max-w-md mx-auto'>
           <h1 className='text-3xl font-bold mb-6 text-[#ffa31a]'>Upload Image</h1>
           <form onSubmit={handleSubmit} className='space-y-6'>
