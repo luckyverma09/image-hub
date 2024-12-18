@@ -1,8 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/router';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
 import Image from 'next/image';
 
 export default function HomePage() {
@@ -58,23 +56,24 @@ export default function HomePage() {
   }
 
   return (
-    <div>
-      <Navbar />
+    <div className='bg-black text-white min-h-screen'>
       <main className='container mx-auto px-4 py-8'>
-        <h1 className='text-3xl font-bold mb-6'>Welcome to the Root Page</h1>
+        <h1 className='text-4xl font-bold mb-6 text-[#ffa31a]'>Explore your Collection</h1>
 
         <section>
-          <h2 className='text-2xl font-semibold mb-4'>Uploaded Images</h2>
           {isLoadingImages ? (
-            <p>Loading images...</p>
+            <p className='text-[#ffa31a]'>Loading images...</p>
           ) : error ? (
             <p className='text-red-500'>Error: {error}</p>
           ) : images.length === 0 ? (
-            <p>No images uploaded yet.</p>
+            <p className='text-white'>No images uploaded yet.</p>
           ) : (
             <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
               {images.map((image) => (
-                <div key={image.asset_id} className='border rounded-lg overflow-hidden shadow-md'>
+                <div
+                  key={image.asset_id}
+                  className='border-2 border-orange-500 rounded-lg overflow-hidden shadow-lg bg-gray-800'
+                >
                   <Image
                     src={image.secure_url}
                     alt={image.display_name}
@@ -82,6 +81,7 @@ export default function HomePage() {
                     height={200}
                     layout='responsive'
                     objectFit='cover'
+                    className='transition-all duration-300 hover:scale-105'
                   />
                 </div>
               ))}
@@ -89,7 +89,6 @@ export default function HomePage() {
           )}
         </section>
       </main>
-      <Footer />
     </div>
   );
 }

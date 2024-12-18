@@ -1,8 +1,11 @@
-//components/Footer.js
+// components/Footer.js
 export default function Footer() {
   return (
-    <footer className='bg-gray-800 text-white text-center py-4 '>
-      <p>&copy; {new Date().getFullYear()} Made with ❣️ by Lucky</p>
+    <footer className='bg-black text-white text-center py-4 mt-auto'>
+      <p>
+        &copy; {new Date().getFullYear()} Made with ❣️ by
+        <span className='text-orange-400'> Lucky</span>
+      </p>
     </footer>
   );
 }

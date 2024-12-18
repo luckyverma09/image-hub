@@ -4,7 +4,9 @@ import NoLayout from '../../components/NoLayout';
 const SignUpPage = () => {
   return (
     <NoLayout>
-      <SignUp path='/sign-up' routing='path' signInUrl='/sign-in' />
+      <div className='flex justify-center items-center  min-h-screen'>
+        <SignUp path='/sign-up' routing='path' signInUrl='/sign-in' />
+      </div>
     </NoLayout>
   );
 };

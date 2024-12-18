@@ -36,23 +36,34 @@ export default function UploadPage() {
   };
 
   return (
-    <div className='container mx-auto mt-8'>
-      <h1 className='text-2xl font-bold mb-4'>Upload Image</h1>
-      <form onSubmit={handleSubmit} className='space-y-4'>
-        <input type='file' onChange={(e) => setFile(e.target.files[0])} />
-        <div className='flex space-x-4'>
-          <button type='submit' className='px-4 py-2 bg-blue-500 text-white rounded'>
-            Upload
-          </button>
-          <button
-            type='button'
-            onClick={() => router.push('/')}
-            className='px-4 py-2 bg-gray-500 text-white rounded'
-          >
-            Go to Homepage
-          </button>
-        </div>
-      </form>
+    <div className='flex items-center justify-center  h-87 bg-gray-300'>
+      <div className='bg-white bg-opacity-30 backdrop-blur-md border border-gray-200 rounded-lg p-8 shadow-lg'>
+        <h1 className='text-3xl font-bold mb-6 text-orange-500'>Upload Image</h1>
+        <form onSubmit={handleSubmit} className='space-y-6'>
+          <div className='flex flex-col'>
+            <input
+              type='file'
+              onChange={(e) => setFile(e.target.files[0])}
+              className='px-4 py-2 bg-gray-700 text-white border-2 border-orange-500 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400'
+            />
+          </div>
+          <div className='flex space-x-4'>
+            <button
+              type='submit'
+              className='px-6 py-3 bg-orange-500 text-white rounded-lg shadow-md hover:bg-orange-600 focus:ring-2 focus:ring-orange-400 transition-all duration-300'
+            >
+              Upload
+            </button>
+            <button
+              type='button'
+              onClick={() => router.push('/')}
+              className='px-6 py-3 bg-gray-700 text-white rounded-lg shadow-md hover:bg-gray-600 focus:ring-2 focus:ring-orange-400 transition-all duration-300'
+            >
+              Go to Homepage
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }
