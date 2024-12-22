@@ -57,7 +57,7 @@ Before you begin, ensure you have met the following requirements:
    ```env
    CLOUDINARY_CLOUD_NAME=
    CLOUDINARY_API_KEY=
-   CLOUDINARY_API_SECRET=-Fw
+   CLOUDINARY_API_SECRET=
    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
    CLERK_SECRET_KEY=
    ```
