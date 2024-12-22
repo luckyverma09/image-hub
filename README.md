@@ -50,7 +50,6 @@ Before you begin, ensure you have met the following requirements:
    npm install
    ```
 
-
 4. **Set up environment variables:**
    Create a `.env.local` file in the root directory and add the following environment variables:
 
@@ -70,45 +69,4 @@ To run the development server:
 npm run dev
 ```
 
-
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-## Deployment
-
-This project can be easily deployed to platforms like Vercel or Netlify. Make sure to set up the environment variables in your deployment platform's settings.
-
-### Netlify Deployment
-
-For Netlify deployment, create a `netlify.toml` file in the root directory with the following content:
-
-```toml
-[build]
-  command = "npm run build"
-  publish = ".next"
-
-[[plugins]]
-  package = "@netlify/plugin-nextjs"
-```
-
-## Contributing
-
-Contributions to this project are welcome. Please follow these steps:
-
-1. Fork the repository
-2. Create a new branch:
-   ```bash
-   git checkout -b feature-branch-name
-   ```
-3. Make your changes and commit them:
-   ```bash
-   git commit -m 'Add some feature'
-   ```
-4. Push to the branch:
-   ```bash
-   git push origin feature-branch-name
-   ```
-5. Create a pull request
-
-## License
-
-This project is licensed under the MIT License.
