@@ -5,7 +5,7 @@ import cloudinary from '../config/cloudinary.js';
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: 'image-hub',
+    folder: 'image-hub', // Ensure images are uploaded to the 'image-hub' folder
     allowed_formats: ['jpeg', 'png', 'jpg'],
   },
 });

@@ -5,10 +5,10 @@ import cloudinary from '../config/cloudinary.js';
 // Upload Image
 export const uploadImage = async (req, res) => {
   try {
-    const result = await cloudinary.uploader.upload(req.file.path); // Upload to Cloudinary
+    // Remove redundant upload to Cloudinary
     const newImage = new Image({
-      url: result.secure_url,
-      public_id: result.public_id,
+      url: req.file.path, // Use the path provided by the middleware
+      public_id: req.file.filename, // Use the filename provided by the middleware
       user: req.user.id, // Make sure the image is associated with the logged-in user
     });
 
@@ -45,9 +45,10 @@ export const deleteImage = async (req, res) => {
     await cloudinary.uploader.destroy(image.public_id);
 
     // Remove the image from the database
-    await image.remove();
+    await Image.deleteOne({ _id: req.params.id });
     res.json({ msg: 'Image deleted successfully' });
   } catch (err) {
-    res.status(500).send('Error deleting image.');
+    console.error('Error deleting image:', err.message);
+    res.status(500).json({ msg: 'Error deleting image', error: err.message });
   }
 };

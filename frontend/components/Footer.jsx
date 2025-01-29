@@ -1,7 +1,8 @@
-// components/Footer.js
+import React from 'react';
+
 export default function Footer() {
   return (
-    <footer className='bg-[#262626] text-white text-center py-4 mt-auto'>
+    <footer className='bg-[#262626] text-white text-center py-4 mt-auto w-full'>
       <p>
         &copy; {new Date().getFullYear()} Made with ❣️ by
         <a
